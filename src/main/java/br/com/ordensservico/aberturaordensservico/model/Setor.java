@@ -11,15 +11,14 @@ import jakarta.persistence.Table;
 public class Setor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String nome;
 
     public Setor() {
     }
 
-    public Setor(Integer id, String nome) {
-        this.id = id;
+    public Setor(String nome) {
         this.nome = nome;
     }
 
