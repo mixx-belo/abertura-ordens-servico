@@ -12,9 +12,9 @@ import jakarta.validation.constraints.NotBlank;
 public class Setor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    @NotBlank (message = "O nome do setor é obrigatório")
+    @NotBlank(message = "O nome do setor é obrigatório")
     private String nome;
 
     public Setor() {
