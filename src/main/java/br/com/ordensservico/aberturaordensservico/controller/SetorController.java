@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.ordensservico.aberturaordensservico.model.Setor;
 import br.com.ordensservico.aberturaordensservico.service.SetorService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/setor")
@@ -27,7 +28,7 @@ public class SetorController {
     }
 
     @PostMapping
-    public ResponseEntity<Setor> cadastrarSetor(@RequestBody Setor setor) {
+    public ResponseEntity<Setor> cadastrarSetor(@Valid @RequestBody Setor setor) {
         Setor novoSetor = setorService.cadastrar(setor);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoSetor);
     }
@@ -54,7 +55,7 @@ public class SetorController {
     @PutMapping("/{id}")
     public ResponseEntity<Setor> atualizar(
             @PathVariable Integer id,
-            @RequestBody Setor novosDados) {
+            @Valid @RequestBody Setor novosDados) {
 
         Optional<Setor> setorAtualizado = setorService.atualizar(id, novosDados);
 
