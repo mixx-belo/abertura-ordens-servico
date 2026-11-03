@@ -1,6 +1,5 @@
 package br.com.ordensservico.aberturaordensservico.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +10,9 @@ import br.com.ordensservico.aberturaordensservico.model.Setor;
 import br.com.ordensservico.aberturaordensservico.repository.EquipamentoRepository;
 import br.com.ordensservico.aberturaordensservico.repository.SetorRepository;
 
-@Service 
+@Service
 public class EquipamentoService {
-    
+
     private final EquipamentoRepository equipamentoRepository;
     private final SetorRepository setorRepository;
 
@@ -23,15 +22,14 @@ public class EquipamentoService {
     }
 
     public Optional<Equipamento> cadastrar(Integer setorId, String nome, String numeroPatrimonio) {
+        Optional<Setor> setorEncontrado = setorRepository.findById(setorId);
 
-        Optional<Setor> setor = setorRepository.findById(setorId);
-
-        if (setor.isEmpty()) {
+        if (setorEncontrado.isEmpty()) {
             return Optional.empty();
         }
 
         Equipamento equipamento = new Equipamento();
-        equipamento.setSetor(setor.get());
+        equipamento.setSetor(setorEncontrado.get());
         equipamento.setNome(nome);
         equipamento.setNumeroPatrimonio(numeroPatrimonio);
 
@@ -53,14 +51,14 @@ public class EquipamentoService {
             return Optional.empty();
         }
 
-        Optional<Setor> setor = setorRepository.findById(setorId);
+        Optional<Setor> setorEncontrado = setorRepository.findById(setorId);
 
-        if (setor.isEmpty()) {
+        if (setorEncontrado.isEmpty()) {
             return Optional.empty();
         }
 
         Equipamento equipamento = equipamentoEncontrado.get();
-        equipamento.setSetor(setor.get());
+        equipamento.setSetor(setorEncontrado.get());
         equipamento.setNome(nome);
         equipamento.setNumeroPatrimonio(numeroPatrimonio);
 
