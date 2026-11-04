@@ -1,16 +1,17 @@
 package br.com.ordensservico.aberturaordensservico.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class EquipamentoRequest {
 
-    @NotNull (message = "O nome é obrigatório.")
+    @NotBlank (message = "O nome é obrigatório.")
     private String nome;
 
-    @NotNull (message = "O número do patrimônio é obrigatório.")
+    @NotBlank (message = "O número do patrimônio é obrigatório.")
     private String numeroPatrimonio;
 
-    @NotNull (message = "O Id do setor é obrigatório.")
+    @NotNull (message = "O setor é obrigatório.")
     private Integer setorId;
 
     public EquipamentoRequest(String nome, String numeroPatrimonio, Integer setorId) {
@@ -20,6 +21,14 @@ public class EquipamentoRequest {
     }
 
     public EquipamentoRequest() {
+    }
+
+    public void setSetorId(Integer setorId) {
+        this.setorId = setorId;
+    }
+
+    public Integer getSetorId() {
+        return setorId;
     }
 
     public String getNome() {
@@ -36,10 +45,6 @@ public class EquipamentoRequest {
 
     public void setNumeroPatrimonio(String numeroPatrimonio) {
         this.numeroPatrimonio = numeroPatrimonio;
-    }
-
-    public Integer getSetorId() {
-        return setorId;
     }
 
 

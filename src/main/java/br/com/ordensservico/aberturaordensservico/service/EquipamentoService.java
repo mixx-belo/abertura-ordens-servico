@@ -9,6 +9,7 @@ import br.com.ordensservico.aberturaordensservico.model.Equipamento;
 import br.com.ordensservico.aberturaordensservico.model.Setor;
 import br.com.ordensservico.aberturaordensservico.repository.EquipamentoRepository;
 import br.com.ordensservico.aberturaordensservico.repository.SetorRepository;
+import br.com.ordensservico.aberturaordensservico.dto.EquipamentoRequest;
 
 @Service
 public class EquipamentoService {
@@ -21,48 +22,53 @@ public class EquipamentoService {
         this.setorRepository = setorRepository;
     }
 
-    public Optional<Equipamento> cadastrar(Integer setorId, String nome, String numeroPatrimonio) {
-        Optional<Setor> setorEncontrado = setorRepository.findById(setorId);
 
-        if (setorEncontrado.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Equipamento equipamento = new Equipamento();
-        equipamento.setSetor(setorEncontrado.get());
-        equipamento.setNome(nome);
-        equipamento.setNumeroPatrimonio(numeroPatrimonio);
-
-        return Optional.of(equipamentoRepository.save(equipamento));
+    public Optional<Equipamento> cadastrar(EquipamentoRequest dto) {
+    if (dto.getSetorId() == null) {
+        return Optional.empty();
     }
 
+    Optional<Setor> setorEncontrado = setorRepository.findById(dto.getSetorId());
+
+    if (setorEncontrado.isEmpty()) {
+        return Optional.empty();
+    }
+
+    Equipamento equipamento = new Equipamento();
+    
+    equipamento.setSetor(setorEncontrado.get());
+    equipamento.setNome(dto.getNome());
+    equipamento.setNumeroPatrimonio(dto.getNumeroPatrimonio());
+
+    return Optional.of(equipamentoRepository.save(equipamento));
+}
+
+public Optional<Equipamento> atualizar(Integer id, EquipamentoRequest dto) {
+    Optional<Equipamento> equipamentoEncontrado = equipamentoRepository.findById(id);
+
+    if (equipamentoEncontrado.isEmpty() || dto.getSetorId() == null) {
+        return Optional.empty();
+    }
+
+    Optional<Setor> setorEncontrado = setorRepository.findById(dto.getSetorId());
+
+    if (setorEncontrado.isEmpty()) {
+        return Optional.empty();
+    }
+
+    Equipamento equipamento = equipamentoEncontrado.get();
+    equipamento.setSetor(setorEncontrado.get());
+    equipamento.setNome(dto.getNome());
+    equipamento.setNumeroPatrimonio(dto.getNumeroPatrimonio());
+
+    return Optional.of(equipamentoRepository.save(equipamento));
+}
     public List<Equipamento> listar() {
         return equipamentoRepository.findAll();
     }
 
     public Optional<Equipamento> buscarPorId(Integer id) {
         return equipamentoRepository.findById(id);
-    }
-
-    public Optional<Equipamento> atualizar(Integer id, Integer setorId, String nome, String numeroPatrimonio) {
-        Optional<Equipamento> equipamentoEncontrado = equipamentoRepository.findById(id);
-
-        if (equipamentoEncontrado.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Optional<Setor> setorEncontrado = setorRepository.findById(setorId);
-
-        if (setorEncontrado.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Equipamento equipamento = equipamentoEncontrado.get();
-        equipamento.setSetor(setorEncontrado.get());
-        equipamento.setNome(nome);
-        equipamento.setNumeroPatrimonio(numeroPatrimonio);
-
-        return Optional.of(equipamentoRepository.save(equipamento));
     }
 
     public boolean excluir(Integer id) {

@@ -1,3 +1,4 @@
+
 package br.com.ordensservico.aberturaordensservico.controller;
 
 import java.util.List;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import br.com.ordensservico.aberturaordensservico.model.Equipamento;
 import br.com.ordensservico.aberturaordensservico.service.EquipamentoService;
+import br.com.ordensservico.aberturaordensservico.dto.EquipamentoRequest;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -28,15 +32,23 @@ public class EquipamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<Equipamento> cadastrarEquipamento(@Valid @RequestBody Equipamento equipamento) {
-        Optional<Equipamento> novoEquipamento = equipamentoService.cadastrar(equipamento.getSetor().getId(),
-                equipamento.getNome(), equipamento.getNumeroPatrimonio());
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoEquipamento.get());
+    public ResponseEntity<Equipamento> cadastrarEquipamento(
+            @Valid @RequestBody EquipamentoRequest dto) {
+
+        Optional<Equipamento> novo = equipamentoService.cadastrar(dto);
+
+        if (novo.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(novo.get());
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping
     public ResponseEntity<List<Equipamento>> listarEquipamentos() {
+
         List<Equipamento> equipamentos = equipamentoService.listar();
+
         return ResponseEntity.ok(equipamentos);
     }
 
@@ -56,10 +68,10 @@ public class EquipamentoController {
     @PutMapping("/{id}")
     public ResponseEntity<Equipamento> atualizar(
             @PathVariable Integer id,
-            @Valid @RequestBody Equipamento novosDados) {
+            @Valid @RequestBody EquipamentoRequest dto) {
 
-        Optional<Equipamento> equipamentoAtualizado = equipamentoService.atualizar(
-                id, novosDados.getSetor().getId(), novosDados.getNome(), novosDados.getNumeroPatrimonio());
+        Optional<Equipamento> equipamentoAtualizado =
+                equipamentoService.atualizar(id, dto);
 
         if (equipamentoAtualizado.isPresent()) {
             return ResponseEntity.ok(equipamentoAtualizado.get());
@@ -80,5 +92,4 @@ public class EquipamentoController {
 
         return ResponseEntity.notFound().build();
     }
-
 }
