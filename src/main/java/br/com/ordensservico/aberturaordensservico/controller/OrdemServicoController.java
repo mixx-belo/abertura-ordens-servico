@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,4 +62,25 @@ public class OrdemServicoController {
         return ResponseEntity.notFound().build();
     }
 
+    @PatchMapping("/{id}/encerramento")
+    public ResponseEntity<OrdemServico> encerrarOrdemServico(
+            @PathVariable Integer id,
+            @Valid @RequestBody br.com.ordensservico.aberturaordensservico.dto.EncerramentoOrdemServicoRequest dto) {
+
+        Optional<OrdemServico> ordemServico = ordemServicoService.encerrar(id, dto);
+
+        if (ordemServico.isPresent()) {
+            return ResponseEntity.ok(ordemServico.get());
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/abertas")
+    public ResponseEntity<Iterable<OrdemServico>> listarAbertas() {
+
+        Iterable<OrdemServico> ordensServico = ordemServicoService.listarAbertas();
+
+        return ResponseEntity.ok(ordensServico);
+    }
 }
